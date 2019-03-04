@@ -1,0 +1,32 @@
+{
+    "env": {
+        "browser": true,
+        "commonjs": true,
+        "node": true,
+        "amd": true,
+        "es6": true
+    },
+    "extends": [
+      "plugin:@typescript-eslint/recommended",
+      "plugin:prettier/recommended",
+      "prettier",
+      "prettier/@typescript-eslint",
+      "eslint:recommended"
+    ],
+    "rules": {
+      "semi": "error",
+      "@typescript-eslint/no-explicit-any": "off",
+      "prettier/prettier": [
+        "error",
+        {
+            "singleQuote": true,
+            "trailingComma": "all"
+        }
+      ]
+    },
+    "parser": "@typescript-eslint/parser",
+    "plugins": [
+      "@typescript-eslint",
+      "prettier"
+    ]
+}
