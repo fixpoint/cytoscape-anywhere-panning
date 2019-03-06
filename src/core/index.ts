@@ -2,7 +2,10 @@ import { Core, EventObject } from 'cytoscape';
 
 const MOUSE_BUTTON1 = 0;
 
-export default function extension(this: Core, enabled: () => boolean): Core {
+export default function extension(
+  this: Core,
+  enabled: () => boolean = () => true,
+): Core {
   let startPosition: null | {
     readonly x: number;
     readonly y: number;
@@ -31,10 +34,4 @@ export default function extension(this: Core, enabled: () => boolean): Core {
   });
 
   return this;
-}
-
-declare module 'cytoscape' {
-  interface Core {
-    anywherePanning(enabled: () => boolean): void;
-  }
 }
