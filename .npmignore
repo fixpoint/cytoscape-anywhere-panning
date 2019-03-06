@@ -2,6 +2,9 @@
 .rpt2_cache/
 node_modules/
 src/
+.eslintignore
+.eslintrc
+.prettierrc
 dist/index.html
 rollup.config.js
 tsconfig.json
