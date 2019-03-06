@@ -1,6 +1,9 @@
+import 'cytoscape';
+
 var MOUSE_BUTTON1 = 0;
 function extension(enabled) {
     var _this = this;
+    if (enabled === void 0) { enabled = function () { return true; }; }
     var startPosition;
     this.on('mousedown', 'node, edge', function (evt) {
         var e = evt.originalEvent;
@@ -31,11 +34,17 @@ function register(cy) {
     if (!cy) {
         return;
     }
+    // Initialize extension
+    // Register extension
     var extensionName = 'anywherePanning';
     cy('core', extensionName, extension);
+    // cy('collection', extensionName, extension);
+    // cy('layout', extensionName, extension);
+    // cy('renderer', extensionName, extension);
 }
-if (typeof cytoscape !== 'undefined') {
-    register(cytoscape);
+if (typeof window.cytoscape !== 'undefined') {
+    register(window.cytoscape);
 }
 
-export { register };
+export default register;
+//# sourceMappingURL=index.esm.js.map
