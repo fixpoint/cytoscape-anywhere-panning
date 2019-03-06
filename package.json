@@ -2,9 +2,9 @@
   "name": "cytoscape-anywhere-panning",
   "version": "0.1.0",
   "description": "Add anywhere-panning event",
-  "main": "dist/index.common.js",
-  "module": "dist/index.esm.js",
-  "unpkg": "dist/index.js",
+  "main": "./dist/index.common.js",
+  "module": "./dist/index.esm.js",
+  "unpkg": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
     "prepare": "run-s lint build copyright",
