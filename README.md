@@ -21,25 +21,25 @@ ES import:
 
 ```js
 import cytoscape from 'cytoscape';
-import anywhere-panning from 'cytoscape-anywhere-panning';
+import anywherePanning from 'cytoscape-anywhere-panning';
 
-cytoscape.use( anywhere-panning );
+cytoscape.use( anywherePanning );
 ```
 
 CommonJS require:
 
 ```js
 let cytoscape = require('cytoscape');
-let anywhere-panning = require('cytoscape-anywhere-panning');
+let anywherePanning = require('cytoscape-anywhere-panning');
 
-cytoscape.use( anywhere-panning ); // register extension
+cytoscape.use( anywherePanning ); // register extension
 ```
 
 AMD:
 
 ```js
-require(['cytoscape', 'cytoscape-anywhere-panning'], function( cytoscape, anywhere-panning ){
-  anywhere-panning( cytoscape ); // register extension
+require(['cytoscape', 'cytoscape-anywhere-panning'], function( cytoscape, anywherePanning ){
+  anywherePanning( cytoscape ); // register extension
 });
 ```
 
@@ -49,6 +49,8 @@ Plain HTML/JS has the extension registered for you automatically, because no `re
 ## API
 
 ```js
+cy.anywherePanning();
+
 const enabled = true;
 cy.anywherePanning(function() {
     return enabled;
