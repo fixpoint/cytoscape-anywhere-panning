@@ -1,5 +1,7 @@
 # cytoscape-anywhere-panning
 
+**NOTE** It seems this plugin is no longer required for cytoscape after [this commit](https://github.com/cytoscape/cytoscape.js/commit/bd4f56ab7fc8b2ff9e5a81c4f1beedda098fb549)
+
 ## Description
 
 Allow panning from nodes/edges ([demo](https://lambdalisue.github.io/cytoscape-anywhere-panning))
