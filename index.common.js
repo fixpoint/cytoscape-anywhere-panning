@@ -3,19 +3,26 @@
 require('cytoscape');
 
 var MOUSE_BUTTON1 = 0;
+function isActive(event) {
+    if (event instanceof MouseEvent) {
+        return event.button === MOUSE_BUTTON1;
+    }
+    else if (event instanceof TouchEvent) {
+        return event.touches.length === 1;
+    }
+    return false;
+}
 function extension(enabled) {
     var _this = this;
     if (enabled === void 0) { enabled = function () { return true; }; }
     var startPosition;
     this.on('vmousedown', 'node, edge', function (evt) {
-        var e = evt.originalEvent;
-        if (enabled() && e.button === MOUSE_BUTTON1) {
+        if (enabled() && isActive(evt.originalEvent)) {
             startPosition = evt.position;
         }
     });
     this.on('vmouseup', function (evt) {
-        var e = evt.originalEvent;
-        if (e.button === MOUSE_BUTTON1) {
+        if (isActive(evt.originalEvent)) {
             startPosition = null;
         }
     });
