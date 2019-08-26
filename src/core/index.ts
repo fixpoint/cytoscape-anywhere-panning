@@ -10,19 +10,19 @@ export default function extension(
     readonly x: number;
     readonly y: number;
   };
-  this.on('mousedown', 'node, edge', (evt: EventObject) => {
+  this.on('vmousedown', 'node, edge', (evt: EventObject) => {
     const e = (evt.originalEvent as any) as MouseEvent;
     if (enabled() && e.button === MOUSE_BUTTON1) {
       startPosition = evt.position;
     }
   });
-  this.on('mouseup', (evt: EventObject) => {
+  this.on('vmouseup', (evt: EventObject) => {
     const e = (evt.originalEvent as any) as MouseEvent;
     if (e.button === MOUSE_BUTTON1) {
       startPosition = null;
     }
   });
-  this.on('mousemove', (evt: EventObject) => {
+  this.on('vmousemove', (evt: EventObject) => {
     if (startPosition) {
       const zoom = this.zoom();
       const relativePosition = {
