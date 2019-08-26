@@ -2,6 +2,15 @@ import { Core, EventObject } from 'cytoscape';
 
 const MOUSE_BUTTON1 = 0;
 
+function isActive(event: EventObject): boolean {
+  if (event instanceof MouseEvent) {
+    return event.button === MOUSE_BUTTON1;
+  } else if (event instanceof TouchEvent) {
+    return event.touches.length === 1;
+  }
+  return false;
+}
+
 export default function extension(
   this: Core,
   enabled: () => boolean = () => true,
@@ -11,14 +20,12 @@ export default function extension(
     readonly y: number;
   };
   this.on('vmousedown', 'node, edge', (evt: EventObject) => {
-    const e = (evt.originalEvent as any) as MouseEvent;
-    if (enabled() && e.button === MOUSE_BUTTON1) {
+    if (enabled() && isActive(evt.originalEvent)) {
       startPosition = evt.position;
     }
   });
   this.on('vmouseup', (evt: EventObject) => {
-    const e = (evt.originalEvent as any) as MouseEvent;
-    if (e.button === MOUSE_BUTTON1) {
+    if (isActive(evt.originalEvent)) {
       startPosition = null;
     }
   });
