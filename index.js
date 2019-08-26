@@ -9,19 +9,19 @@
       var _this = this;
       if (enabled === void 0) { enabled = function () { return true; }; }
       var startPosition;
-      this.on('mousedown', 'node, edge', function (evt) {
+      this.on('vmousedown', 'node, edge', function (evt) {
           var e = evt.originalEvent;
           if (enabled() && e.button === MOUSE_BUTTON1) {
               startPosition = evt.position;
           }
       });
-      this.on('mouseup', function (evt) {
+      this.on('vmouseup', function (evt) {
           var e = evt.originalEvent;
           if (e.button === MOUSE_BUTTON1) {
               startPosition = null;
           }
       });
-      this.on('mousemove', function (evt) {
+      this.on('vmousemove', function (evt) {
           if (startPosition) {
               var zoom = _this.zoom();
               var relativePosition = {
