@@ -29,6 +29,9 @@ import 'cytoscape';
 
 declare module 'cytoscape' {
   interface Core {
-    anywherePanning(enabled?: () => boolean): void;
+    anywherePanning(
+      enabled?: () => boolean,
+      activator?: (event: cytoscape.EventObject) => boolean,
+    ): void;
   }
 }

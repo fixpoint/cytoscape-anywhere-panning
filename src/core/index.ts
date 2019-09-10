@@ -14,18 +14,19 @@ function isActive(event: EventObject): boolean {
 export default function extension(
   this: Core,
   enabled: () => boolean = () => true,
+  activator: (event: EventObject) => boolean = isActive,
 ): Core {
   let startPosition: null | {
     readonly x: number;
     readonly y: number;
   };
   this.on('vmousedown', 'node, edge', (evt: EventObject) => {
-    if (enabled() && isActive(evt.originalEvent)) {
+    if (enabled() && activator(evt.originalEvent)) {
       startPosition = evt.position;
     }
   });
   this.on('vmouseup', (evt: EventObject) => {
-    if (isActive(evt.originalEvent)) {
+    if (activator(evt.originalEvent)) {
       startPosition = null;
     }
   });
