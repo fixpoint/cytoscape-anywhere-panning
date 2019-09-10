@@ -5,8 +5,6 @@ const MOUSE_BUTTON1 = 0;
 function isActive(event: EventObject): boolean {
   if (event instanceof MouseEvent) {
     return event.button === MOUSE_BUTTON1;
-  } else if (event instanceof TouchEvent) {
-    return event.touches.length === 1;
   }
   return false;
 }
