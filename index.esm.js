@@ -5,22 +5,20 @@ function isActive(event) {
     if (event instanceof MouseEvent) {
         return event.button === MOUSE_BUTTON1;
     }
-    else if (event instanceof TouchEvent) {
-        return event.touches.length === 1;
-    }
     return false;
 }
-function extension(enabled) {
+function extension(enabled, activator) {
     var _this = this;
     if (enabled === void 0) { enabled = function () { return true; }; }
+    if (activator === void 0) { activator = isActive; }
     var startPosition;
     this.on('vmousedown', 'node, edge', function (evt) {
-        if (enabled() && isActive(evt.originalEvent)) {
+        if (enabled() && activator(evt.originalEvent)) {
             startPosition = evt.position;
         }
     });
     this.on('vmouseup', function (evt) {
-        if (isActive(evt.originalEvent)) {
+        if (activator(evt.originalEvent)) {
             startPosition = null;
         }
     });

@@ -1,121 +1,134 @@
-<!DOCTYPE>
+<!DOCTYPE >
 <html>
-<title>cytoscape-anywhere-panning.js demo</title>
-<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
-<script src="https://unpkg.com/cytoscape/dist/cytoscape.min.js"></script>
-<script src="./index.js"></script>
-<style>
-html {
-  font-size: 10px;
-}
+  <title>cytoscape-anywhere-panning.js demo</title>
+  <meta
+    name="viewport"
+    content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1"
+  />
+  <script src="https://unpkg.com/cytoscape/dist/cytoscape.min.js"></script>
+  <script src="./index.js"></script>
+  <style>
+    html {
+      font-size: 10px;
+    }
 
-body {
-  display: flex;
-  font-size: 1.4rem;
-  margin: 0;
-  padding: 0;
-}
+    body {
+      display: flex;
+      font-size: 1.4rem;
+      margin: 0;
+      padding: 0;
+    }
 
-#header {
-  color: #aabbcc;
-  flex: 0 0 300px;
-  padding: 2em;
-  filter: drop-shadow(2px 0 4px rgba(0, 0, 0, 0.12));
-  background: #333;
-}
+    #header {
+      color: #aabbcc;
+      flex: 0 0 300px;
+      padding: 2em;
+      filter: drop-shadow(2px 0 4px rgba(0, 0, 0, 0.12));
+      background: #333;
+    }
 
-#header a {
-  color: inherit;
-  text-decoration: none;
-}
+    #header a {
+      color: inherit;
+      text-decoration: none;
+    }
 
-#header a:hover {
-  text-decoration: underline;
-}
+    #header a:hover {
+      text-decoration: underline;
+    }
 
-#header h1 {
-  font-size: 1.8rem;
-}
+    #header h1 {
+      font-size: 1.8rem;
+    }
 
-#header h2 {
-  font-size: 1.2rem;
-  color: gray;
-}
+    #header h2 {
+      font-size: 1.2rem;
+      color: gray;
+    }
 
-#cy {
-  flex: 1 1 auto;
-}
-</style>
-<body>
-  <header id="header">
-    <a href="https://github.com/lambdalisue/cytoscape-anywhere-panning">
-      <h1>cytoscape-anywhere-panning</h1>
-      <h2>lambdalisue/cytoscape-anywhere-panning</h2>
-    </a>
-    <p>
-      Anywhere panning allow panning from nodes/edges.
-      Click the following check-box to enter/leavel the anywhere panning mode.
-    </p>
-    <label>
-      <input type="checkbox" id="pan-mode">
-      Anywhere panning mode
-    </label>
-  </header>
-  <div id="cy"></div>
-  <script>
-    var panningModeElement = document.getElementById('pan-mode');
+    #cy {
+      flex: 1 1 auto;
+    }
+  </style>
+  <body>
+    <header id="header">
+      <a href="https://github.com/lambdalisue/cytoscape-anywhere-panning">
+        <h1>cytoscape-anywhere-panning</h1>
+        <h2>lambdalisue/cytoscape-anywhere-panning</h2>
+      </a>
+      <p>
+        Anywhere panning allow panning from nodes/edges. Click the following
+        check-box to enter/leavel the anywhere panning mode.
+      </p>
+      <label>
+        <input type="checkbox" id="pan-mode" />
+        Anywhere panning mode
+      </label>
+    </header>
+    <div id="cy"></div>
+    <script>
+      var panningModeElement = document.getElementById('pan-mode');
 
-    document.addEventListener('DOMContentLoaded', function(){
-      var cy = window.cy = cytoscape({
-        container: document.getElementById('cy'),
-        style: [
-          {
-            selector: 'node',
-            style: {
-              'content': 'data(name)'
-            }
-          },
-          {
-            selector: 'node.anywhere-panninged',
-            style: {
-              'overlay-color': 'red',
-              'overlay-padding': '5px',
-              'overlay-opacity': 0.5,
-            }
-          },
-          {
-            selector: 'edge',
-            style: {
-              'curve-style': 'bezier',
-              'target-arrow-shape': 'triangle'
-            }
-          }
-        ],
-        elements: {
-          nodes: [
-            { data: { id: 'j', name: 'Jerry' } },
-            { data: { id: 'e', name: 'Elaine' } },
-            { data: { id: 'k', name: 'Kramer' } },
-            { data: { id: 'g', name: 'George' } }
+      document.addEventListener('DOMContentLoaded', function() {
+        var cy = (window.cy = cytoscape({
+          container: document.getElementById('cy'),
+          style: [
+            {
+              selector: 'node',
+              style: {
+                content: 'data(name)',
+              },
+            },
+            {
+              selector: 'node.anywhere-panninged',
+              style: {
+                'overlay-color': 'red',
+                'overlay-padding': '5px',
+                'overlay-opacity': 0.5,
+              },
+            },
+            {
+              selector: 'edge',
+              style: {
+                'curve-style': 'bezier',
+                'target-arrow-shape': 'triangle',
+              },
+            },
           ],
-          edges: [
-            { data: { source: 'j', target: 'e' } },
-            { data: { source: 'j', target: 'k' } },
-            { data: { source: 'j', target: 'g' } },
-            { data: { source: 'e', target: 'j' } },
-            { data: { source: 'e', target: 'k' } },
-            { data: { source: 'k', target: 'j' } },
-            { data: { source: 'k', target: 'e' } },
-            { data: { source: 'k', target: 'g' } },
-            { data: { source: 'g', target: 'j' } }
-          ]
-        }
+          elements: {
+            nodes: [
+              { data: { id: 'j', name: 'Jerry' } },
+              { data: { id: 'e', name: 'Elaine' } },
+              { data: { id: 'k', name: 'Kramer' } },
+              { data: { id: 'g', name: 'George' } },
+            ],
+            edges: [
+              { data: { source: 'j', target: 'e' } },
+              { data: { source: 'j', target: 'k' } },
+              { data: { source: 'j', target: 'g' } },
+              { data: { source: 'e', target: 'j' } },
+              { data: { source: 'e', target: 'k' } },
+              { data: { source: 'k', target: 'j' } },
+              { data: { source: 'k', target: 'e' } },
+              { data: { source: 'k', target: 'g' } },
+              { data: { source: 'g', target: 'j' } },
+            ],
+          },
+        }));
+        // demo your core ext
+        cy.anywherePanning(
+          function() {
+            return panningModeElement.checked;
+          },
+          function(event) {
+            if (event instanceof MouseEvent) {
+              return event.button === 0;
+            } else if (event instanceof TouchEvent) {
+              return event.touches.length === 1;
+            }
+            return false;
+          },
+        );
       });
-      // demo your core ext
-      cy.anywherePanning(function() {
-        return panningModeElement.checked;
-      });
-    });
-  </script>
-</body>
+    </script>
+  </body>
 </html>
