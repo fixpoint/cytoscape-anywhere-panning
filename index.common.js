@@ -2,37 +2,57 @@
 
 require('cytoscape');
 
-var MOUSE_BUTTON1 = 0;
-function isActive(event) {
-    if (event instanceof MouseEvent) {
-        return event.button === MOUSE_BUTTON1;
-    }
-    return false;
-}
-function extension(enabled, activator) {
+var defaultThreshold = 5;
+var defaultActivators = [
+    function (evt) {
+        if (evt.originalEvent instanceof MouseEvent) {
+            return evt.originalEvent.button === 0;
+        }
+        else if (evt.originalEvent instanceof TouchEvent) {
+            return evt.originalEvent.touches.length === 1;
+        }
+        return false;
+    },
+];
+function extension(options) {
     var _this = this;
-    if (enabled === void 0) { enabled = function () { return true; }; }
-    if (activator === void 0) { activator = isActive; }
-    var startPosition;
-    this.on('vmousedown', 'node, edge', function (evt) {
-        if (enabled() && activator(evt.originalEvent)) {
-            startPosition = evt.position;
+    if (options === void 0) { options = {}; }
+    var threshold = options.threshold || defaultThreshold;
+    var activators = options.activators || defaultActivators;
+    var hasPanStarted = false;
+    var startEvent;
+    this.on('vmousedown', function (evt) {
+        if (activators.some(function (activator) { return activator(evt); })) {
+            startEvent = evt;
         }
     });
     this.on('vmouseup', function (evt) {
-        if (activator(evt.originalEvent)) {
-            startPosition = null;
+        if (hasPanStarted) {
+            _this.emit('awpanend', [evt]);
         }
+        startEvent = null;
+        hasPanStarted = false;
     });
     this.on('vmousemove', function (evt) {
-        if (startPosition) {
-            var zoom = _this.zoom();
-            var relativePosition = {
-                x: (evt.position.x - startPosition.x) * zoom,
-                y: (evt.position.y - startPosition.y) * zoom,
-            };
-            _this.panBy(relativePosition);
+        if (!startEvent) {
+            return;
         }
+        var startPosition = startEvent.position;
+        var deltaX = evt.position.x - startPosition.x;
+        var deltaY = evt.position.y - startPosition.y;
+        if (!hasPanStarted) {
+            if (Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2)) < threshold) {
+                return;
+            }
+            _this.emit('awpanstart', [startEvent]);
+            hasPanStarted = true;
+        }
+        var zoom = _this.zoom();
+        _this.panBy({
+            x: deltaX * zoom,
+            y: deltaY * zoom,
+        });
+        _this.emit('awpanmove', [evt]);
     });
     return this;
 }

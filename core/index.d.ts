@@ -1,2 +1,8 @@
 import { Core, EventObject } from 'cytoscape';
-export default function extension(this: Core, enabled?: () => boolean, activator?: (event: EventObject) => boolean): Core;
+declare type Activator = (evt: EventObject) => boolean;
+interface Options {
+    threshold?: number;
+    activators?: Activator[];
+}
+export default function extension(this: Core, options?: Options): Core;
+export {};
