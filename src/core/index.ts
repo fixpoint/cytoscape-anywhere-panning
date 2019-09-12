@@ -1,42 +1,62 @@
 import { Core, EventObject } from 'cytoscape';
 
-const MOUSE_BUTTON1 = 0;
+type Activator = (evt: EventObject) => boolean;
 
-function isActive(event: EventObject): boolean {
-  if (event instanceof MouseEvent) {
-    return event.button === MOUSE_BUTTON1;
-  }
-  return false;
+interface Options {
+  threshold?: number;
+  activators?: Activator[];
 }
 
-export default function extension(
-  this: Core,
-  enabled: () => boolean = () => true,
-  activator: (event: EventObject) => boolean = isActive,
-): Core {
-  let startPosition: null | {
-    readonly x: number;
-    readonly y: number;
-  };
-  this.on('vmousedown', 'node, edge', (evt: EventObject) => {
-    if (enabled() && activator(evt.originalEvent)) {
-      startPosition = evt.position;
+const defaultThreshold = 5;
+
+const defaultActivators: Activator[] = [
+  evt => {
+    if (evt.originalEvent instanceof MouseEvent) {
+      return evt.originalEvent.button === 0;
+    } else if (evt.originalEvent instanceof TouchEvent) {
+      return evt.originalEvent.touches.length === 1;
+    }
+    return false;
+  },
+];
+
+export default function extension(this: Core, options: Options = {}): Core {
+  const threshold = options.threshold || defaultThreshold;
+  const activators = options.activators || defaultActivators;
+  let hasPanStarted = false;
+  let startEvent: null | EventObject;
+  this.on('vmousedown', (evt: EventObject) => {
+    if (activators.some(activator => activator(evt))) {
+      startEvent = evt;
     }
   });
   this.on('vmouseup', (evt: EventObject) => {
-    if (activator(evt.originalEvent)) {
-      startPosition = null;
+    if (hasPanStarted) {
+      this.emit('awpanend', [evt]);
     }
+    startEvent = null;
+    hasPanStarted = false;
   });
   this.on('vmousemove', (evt: EventObject) => {
-    if (startPosition) {
-      const zoom = this.zoom();
-      const relativePosition = {
-        x: (evt.position.x - startPosition.x) * zoom,
-        y: (evt.position.y - startPosition.y) * zoom,
-      };
-      this.panBy(relativePosition);
+    if (!startEvent) {
+      return;
     }
+    const startPosition = startEvent.position;
+    const deltaX = evt.position.x - startPosition.x;
+    const deltaY = evt.position.y - startPosition.y;
+    if (!hasPanStarted) {
+      if (Math.sqrt(deltaX ** 2 + deltaY ** 2) < threshold) {
+        return;
+      }
+      this.emit('awpanstart', [startEvent]);
+      hasPanStarted = true;
+    }
+    const zoom = this.zoom();
+    this.panBy({
+      x: deltaX * zoom,
+      y: deltaY * zoom,
+    });
+    this.emit('awpanmove', [evt]);
   });
 
   return this;

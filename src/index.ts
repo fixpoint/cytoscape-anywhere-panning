@@ -28,10 +28,11 @@ if (typeof window.cytoscape !== 'undefined') {
 import 'cytoscape';
 
 declare module 'cytoscape' {
+  interface Options {
+    activators?: (evt: cytoscape.EventObject) => boolean;
+  }
+
   interface Core {
-    anywherePanning(
-      enabled?: () => boolean,
-      activator?: (event: cytoscape.EventObject) => boolean,
-    ): void;
+    anywherePanning(options?: Options): void;
   }
 }

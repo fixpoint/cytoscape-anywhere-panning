@@ -1,6 +1,8 @@
 # cytoscape-anywhere-panning
 
-**NOTE** It seems this plugin is no longer required for cytoscape after [this commit](https://github.com/cytoscape/cytoscape.js/commit/bd4f56ab7fc8b2ff9e5a81c4f1beedda098fb549)
+**NOTE** You may not need this plugin because of [this commit](https://github.com/cytoscape/cytoscape.js/commit/bd4f56ab7fc8b2ff9e5a81c4f1beedda098fb549).
+
+**NOTE** The API has drastically changed from v0.4.0 to v0.5.0.
 
 ## Description
 
@@ -53,9 +55,48 @@ Plain HTML/JS has the extension registered for you automatically, because no `re
 ```js
 cy.anywherePanning();
 
-const enabled = true;
-cy.anywherePanning(function() {
-    return enabled;
+cy.anywherePanning({
+    // Drag threshold in pixel.
+    // The panning starts only after the distance between start cursor position
+    // to the current cursor position beyond the "threshold".
+    threshold: 10,
+
+    // A function list which receive cytoscape.EventObject and returns boolean.
+    // When non functions return true, anywhere panning is ignored.
+    // Note that when no activators are specfied, the default activators like
+    // below is used.
+    activators: [
+        function(evt) {
+            if (evt instanceof MouseEvent) {
+                // Enable when user drag with left button
+                return evt.originalEvent.button === 0;
+            }
+            else if (evt instanceof TouchEvent) {
+                // Enable when user drag with one finger
+                return evt.originalEvent.touches.length === 1;
+            }
+            return false;
+        },
+    ],
+});
+
+
+// An event which is emitted when panning has started.
+// The second argument is an event for "vmousedown".
+cy.on('awpanstart', function(evt, evt2) {
+    panning = 'started';
+});
+
+// An event which is emitted when the cursor has moved during panning.
+// The second argument is an event for "vmousemove".
+cy.on('awpanmove', function(evt, evt2) {
+    panning = 'moving';
+});
+
+// An event which is emitted when the panning has ended.
+// The second argument is an event for "vmouseup".
+cy.on('awpanend', function(evt, evt2) {
+    panning = 'ended';
 });
 ```
 
