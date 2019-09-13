@@ -28,8 +28,12 @@ if (typeof window.cytoscape !== 'undefined') {
 import 'cytoscape';
 
 declare module 'cytoscape' {
+  interface Activator {
+    (evt: cytoscape.EventObject): boolean;
+  }
+
   interface Options {
-    activators?: (evt: cytoscape.EventObject) => boolean;
+    activators?: Activator[];
   }
 
   interface Core {
