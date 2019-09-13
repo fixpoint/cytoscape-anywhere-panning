@@ -6,8 +6,11 @@ declare global {
 }
 import 'cytoscape';
 declare module 'cytoscape' {
+    interface Activator {
+        (evt: cytoscape.EventObject): boolean;
+    }
     interface Options {
-        activators?: (evt: cytoscape.EventObject) => boolean;
+        activators?: Activator[];
     }
     interface Core {
         anywherePanning(options?: Options): void;
