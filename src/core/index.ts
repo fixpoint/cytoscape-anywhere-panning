@@ -23,16 +23,24 @@ const defaultActivators: Activator[] = [
 export default function extension(this: Core, options: Options = {}): Core {
   const threshold = options.threshold || defaultThreshold;
   const activators = options.activators || defaultActivators;
+  const userPanningEnabled = this.userPanningEnabled();
+  const boxSelectionEnabled = this.boxSelectionEnabled();
   let hasPanStarted = false;
   let startEvent: null | EventObject;
   this.on('vmousedown', (evt: EventObject) => {
     if (activators.some(activator => activator(evt))) {
       startEvent = evt;
+      // Disable user panning
+      this.userPanningEnabled(false);
+      // Disable box selection while panning
+      this.boxSelectionEnabled(false);
     }
   });
   this.on('vmouseup', (evt: EventObject) => {
     if (hasPanStarted) {
       this.emit('awpanend', [evt]);
+      this.userPanningEnabled(userPanningEnabled);
+      this.boxSelectionEnabled(boxSelectionEnabled);
     }
     startEvent = null;
     hasPanStarted = false;
