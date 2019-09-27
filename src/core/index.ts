@@ -30,10 +30,6 @@ export default function extension(this: Core, options: Options = {}): Core {
   this.on('vmousedown', (evt: EventObject) => {
     if (activators.some(activator => activator(evt))) {
       startEvent = evt;
-      // Disable user panning
-      this.userPanningEnabled(false);
-      // Disable box selection while panning
-      this.boxSelectionEnabled(false);
     }
   });
   this.on('vmouseup', (evt: EventObject) => {
@@ -58,6 +54,11 @@ export default function extension(this: Core, options: Options = {}): Core {
       }
       this.emit('awpanstart', [startEvent]);
       hasPanStarted = true;
+      // Disable user panning and box selection only on non touch device
+      if (startEvent.originalEvent instanceof MouseEvent) {
+        this.userPanningEnabled(false);
+        this.boxSelectionEnabled(false);
+      }
     }
     const zoom = this.zoom();
     this.panBy({
