@@ -28,10 +28,6 @@
       this.on('vmousedown', function (evt) {
           if (activators.some(function (activator) { return activator(evt); })) {
               startEvent = evt;
-              // Disable user panning
-              _this.userPanningEnabled(false);
-              // Disable box selection while panning
-              _this.boxSelectionEnabled(false);
           }
       });
       this.on('vmouseup', function (evt) {
@@ -56,6 +52,11 @@
               }
               _this.emit('awpanstart', [startEvent]);
               hasPanStarted = true;
+              // Disable user panning and box selection only on non touch device
+              if (startEvent.originalEvent instanceof MouseEvent) {
+                  _this.userPanningEnabled(false);
+                  _this.boxSelectionEnabled(false);
+              }
           }
           var zoom = _this.zoom();
           _this.panBy({
