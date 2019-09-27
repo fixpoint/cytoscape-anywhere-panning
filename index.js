@@ -21,16 +21,24 @@
       if (options === void 0) { options = {}; }
       var threshold = options.threshold || defaultThreshold;
       var activators = options.activators || defaultActivators;
+      var userPanningEnabled = this.userPanningEnabled();
+      var boxSelectionEnabled = this.boxSelectionEnabled();
       var hasPanStarted = false;
       var startEvent;
       this.on('vmousedown', function (evt) {
           if (activators.some(function (activator) { return activator(evt); })) {
               startEvent = evt;
+              // Disable user panning
+              _this.userPanningEnabled(false);
+              // Disable box selection while panning
+              _this.boxSelectionEnabled(false);
           }
       });
       this.on('vmouseup', function (evt) {
           if (hasPanStarted) {
               _this.emit('awpanend', [evt]);
+              _this.userPanningEnabled(userPanningEnabled);
+              _this.boxSelectionEnabled(boxSelectionEnabled);
           }
           startEvent = null;
           hasPanStarted = false;
