@@ -12,11 +12,10 @@
     "dist/**/*.d.ts"
   ],
   "scripts": {
-    "prepare": "run-s lint build copyright",
+    "prepare": "run-s lint build",
     "postpublish": "run-s gh-pages:build gh-pages:deploy",
     "gh-pages:build": "cpy demo.html ./dist --rename=index.html",
     "gh-pages:deploy": "gh-pages -d ./dist",
-    "copyright": "update license",
     "lint": "eslint src/**/*.ts",
     "lint:fix": "eslint src/**/*.ts --fix",
     "build": "rollup -c"
@@ -48,9 +47,7 @@
     "prettier": "^1.16.4",
     "rollup": "^1.4.1",
     "rollup-plugin-typescript2": "^0.23.0",
-    "typescript": "^3.3.3333",
-    "update": "^0.7.4",
-    "updater-license": "^1.0.0"
+    "typescript": "^3.3.3333"
   },
   "peerDependencies": {
     "cytoscape": "^3.4.2"
